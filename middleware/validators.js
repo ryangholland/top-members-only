@@ -28,7 +28,19 @@ const validateUserSignup = [
     .isAlphanumeric()
     .withMessage("Username should contain only letters and numbers")
     .isLength({ min: 3, max: 20 })
-    .withMessage("Username should be between 2 and 20 characters"),
+    .withMessage("Username should be between 2 and 20 characters")
+    .custom(async (value) => {
+      const result = await pool.query(
+        "SELECT id FROM users WHERE username = $1",
+        [value]
+      );
+      if (result.rows.length > 0) {
+        return Promise.reject(
+          "Username already exists. Please choose a different one."
+        );
+      }
+      return true;
+    }),
 
   body("password")
     .notEmpty()
@@ -50,10 +62,8 @@ const validateUserSignup = [
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.render("sign-up", {
-        error: errors
-          .array()
-          .map((err) => err.msg),
-          
+        error: errors.array().map((err) => err.msg),
+
         first_name: req.body.first_name,
         last_name: req.body.last_name,
         username: req.body.username,
