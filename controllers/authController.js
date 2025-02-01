@@ -1,18 +1,20 @@
 const { createUser } = require("../models/userModel");
 
 async function signUp(req, res, next) {
+  const { first_name, last_name, username, password } = req.body;
   try {
-    await createUser(
-      req.body.first_name,
-      req.body.last_name,
-      req.body.username,
-      req.body.password
-    );
-    console.log(`User ${req.body.username} created successfully.`);
+    await createUser(first_name, last_name, username, password);
+    console.log(`User ${username} created successfully.`);
     res.redirect("/");
   } catch (error) {
     console.error(error);
-    next(error);
+
+    return res.render("sign-up", {
+      error: error.message || "An unexpected error occurred",
+      first_name,
+      last_name,
+      username,
+    });
   }
 }
 

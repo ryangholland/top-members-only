@@ -49,38 +49,29 @@ const validateUserSignup = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.render("sign-up", {
+        error: errors
+          .array()
+          .map((err) => err.msg),
+          
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        username: req.body.username,
+      });
     }
     next();
   },
 ];
 
-const checkUsernameExists = async (req, res, next) => {
+const sanitizeInput = (req, res, next) => {
   try {
-    const { username } = req.body;
-    const result = await pool.query(
-      "SELECT id FROM users WHERE username = $1",
-      [username]
-    );
-
-    if (result.rows.length > 0) {
-      return res
-        .status(400)
-        .json({ error: "Username already exists. Choose a different one." });
-    }
-
+    req.body.first_name = sanitizeHtml(req.body.first_name);
+    req.body.last_name = sanitizeHtml(req.body.last_name);
+    req.body.username = sanitizeHtml(req.body.username);
     next();
   } catch (error) {
-    console.error("Error checking username:", error);
-    res.status(500).json({ error: "Server error" });
+    next(error);
   }
 };
 
-const sanitizeInput = (req, res, next) => {
-  req.body.first_name = sanitizeHtml(req.body.first_name);
-  req.body.last_name = sanitizeHtml(req.body.last_name);
-  req.body.username = sanitizeHtml(req.body.username);
-  next();
-};
-
-module.exports = { validateUserSignup, checkUsernameExists, sanitizeInput };
+module.exports = { validateUserSignup, sanitizeInput };

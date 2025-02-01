@@ -3,7 +3,8 @@ const path = require("path");
 const session = require("express-session");
 const passport = require("./config/passport");
 const indexRouter = require("./routes/indexRouter");
-const authRouter = require("./routes/authRouter")
+const authRouter = require("./routes/authRouter");
+const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
@@ -21,7 +22,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use("/", indexRouter);
-app.use("/", authRouter)
+app.use("/", authRouter);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(3000, () => console.log(`App listening on port ${PORT}...`));
