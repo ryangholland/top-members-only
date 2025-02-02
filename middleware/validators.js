@@ -73,6 +73,34 @@ const validateUserSignup = [
   },
 ];
 
+const validatePost = [
+  body("title")
+    .trim()
+    .notEmpty()
+    .withMessage("Title is required")
+    .isLength({ min: 3, max: 255 })
+    .withMessage("Title should be between 3 and 255 characters"),
+
+  body("content")
+    .trim()
+    .notEmpty()
+    .withMessage("Post content is required")
+    .isLength({ min: 10 })
+    .withMessage("Post content must be at least 10 characters long"),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.render("post", {
+        error: errors.array().map((err) => err.msg),
+        title: req.body.title,
+        content: req.body.content,
+      });
+    }
+    next();
+  },
+];
+
 const sanitizeInput = (req, res, next) => {
   try {
     ["first_name", "last_name", "username", "postContent"].forEach((field) => {
@@ -86,4 +114,4 @@ const sanitizeInput = (req, res, next) => {
   }
 };
 
-module.exports = { validateUserSignup, sanitizeInput };
+module.exports = { validateUserSignup, validatePost, sanitizeInput };

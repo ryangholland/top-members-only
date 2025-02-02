@@ -13,7 +13,13 @@
 
     <form action="/post" method="POST">
       <label for="title">Title:</label>
-      <input type="text" id="title" name="title" required />
+      <input
+        type="text"
+        id="title"
+        name="title"
+        value="<%= typeof title !== 'undefined' ? title : '' %>"
+        required
+      />
       <br />
 
       <label for="postContent">Content:</label><br />
@@ -23,7 +29,7 @@
         rows="5"
         cols="40"
         required
-      ></textarea
+      ><%= typeof content !== 'undefined' ? content : '' %></textarea
       ><br />
 
       <button type="submit">Submit</button>
