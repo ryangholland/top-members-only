@@ -7,6 +7,15 @@
   </head>
   <body>
     <h1>Hello. This is the index.</h1>
+
+    <% if (currentUser) { %>
+    <p>Welcome, <%= currentUser.first_name %>!</p>
+    <p>You're logged in as <%= currentUser.username %>.</p>
+    <a href="/log-out">Log out</a>
+    <% } else { %>
+    <a href="/log-in">Log in</a>
+    <br />
     <a href="/sign-up">Sign up</a>
+    <% } %>
   </body>
 </html>

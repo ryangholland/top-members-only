@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Members Only - Log In</title>
+  </head>
+  <body>
+    <h1>Log In</h1>
+    <hr />
+
+    <%- include("partials/errors.ejs") %>
+
+    <form action="/log-in" method="POST">
+      <label for="username">Username:</label>
+      <input
+        id="username"
+        name="username"
+        value="<%= typeof username !== 'undefined' ? username : '' %>"
+        placeholder="username"
+        type="text"
+      />
+      <br />
+      <label for="password">Password:</label>
+      <input id="password" name="password" type="password" />
+      <br />
+      <button type="submit">Log In</button>
+    </form>
+
+    <hr />
+    <a href="/">Home</a>
+  </body>
+</html>

@@ -75,9 +75,11 @@ const validateUserSignup = [
 
 const sanitizeInput = (req, res, next) => {
   try {
-    req.body.first_name = sanitizeHtml(req.body.first_name);
-    req.body.last_name = sanitizeHtml(req.body.last_name);
-    req.body.username = sanitizeHtml(req.body.username);
+    ["first_name", "last_name", "username"].forEach((field) => {
+      if (req.body[field]) {
+        req.body[field] = sanitizeHtml(req.body[field]);
+      }
+    });
     next();
   } catch (error) {
     next(error);

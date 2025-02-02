@@ -11,7 +11,8 @@ async function createUser(first_name, last_name, username, password) {
     );
     return result;
   } catch (error) {
-    if (error.code === "23505") { // Unique constraint violation (duplicate username)
+    if (error.code === "23505") {
+      // Unique constraint violation (duplicate username)
       throw new Error(
         "Username already exists. Please choose a different one."
       );
@@ -20,4 +21,11 @@ async function createUser(first_name, last_name, username, password) {
   }
 }
 
-module.exports = { createUser };
+async function getUserByUsername(username) {
+  const result = await pool.query("SELECT * FROM users WHERE username = $1", [
+    username,
+  ]);
+  return result.rows[0];
+}
+
+module.exports = { createUser, getUserByUsername };
