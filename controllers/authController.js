@@ -38,6 +38,15 @@ async function joinClub(req, res, next) {
   }
 }
 
+async function leaveClub(req, res, next) {
+  try {
+    await updateUserMembership(req.user.id, "regular");
+    res.redirect("/");
+  } catch (error) {
+    next(error);
+  }
+}
+
 function logOut(req, res, next) {
   req.logout((err) => {
     if (err) return next(err);
@@ -45,4 +54,4 @@ function logOut(req, res, next) {
   });
 }
 
-module.exports = { signUp, joinClub, logOut };
+module.exports = { signUp, joinClub, leaveClub, logOut };

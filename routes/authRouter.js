@@ -4,7 +4,12 @@ const {
   validateUserSignup,
   sanitizeInput,
 } = require("../middleware/validators");
-const { signUp, joinClub, logOut } = require("../controllers/authController");
+const {
+  signUp,
+  joinClub,
+  leaveClub,
+  logOut,
+} = require("../controllers/authController");
 const isAuth = require("../middleware/isAuth");
 
 const router = express.Router();
@@ -34,7 +39,9 @@ router.post("/log-in", sanitizeInput, (req, res, next) => {
 
 router.get("/join", isAuth, (req, res) => res.render("join"));
 
-router.post("/join", isAuth, joinClub)
+router.post("/join", isAuth, joinClub);
+
+router.get("/leave", isAuth, leaveClub);
 
 router.get("/log-out", logOut);
 
