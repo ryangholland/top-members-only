@@ -1,4 +1,5 @@
 const { createUser, updateUserMembership } = require("../models/userModel");
+const passport = require("passport");
 
 async function signUp(req, res, next) {
   const { first_name, last_name, username, password } = req.body;
@@ -16,6 +17,26 @@ async function signUp(req, res, next) {
       username,
     });
   }
+}
+
+async function logIn(req, res, next) {
+  passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return res.render("log-in", {
+          error: info ? info.message : "Invalid username or password.",
+          username: req.body.username,
+        });
+      }
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+        return res.redirect("/");
+      });
+    })(req, res, next);
 }
 
 async function joinClub(req, res, next) {
@@ -54,4 +75,4 @@ function logOut(req, res, next) {
   });
 }
 
-module.exports = { signUp, joinClub, leaveClub, logOut };
+module.exports = { signUp, logIn, joinClub, leaveClub, logOut };
