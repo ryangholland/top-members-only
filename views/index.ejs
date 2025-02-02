@@ -31,8 +31,14 @@
           <div>
               <h3><%= post.title %></h3>
               <p><%= post.text %></p>
-              <p><small>Posted by <%= post.username %> on <%= new Date(post.timestamp).toLocaleString() %></small></p>
-          </div>
+              <p><small>
+                <% if (currentUser && currentUser.membership_status !== "regular") { %>
+                    Posted by <%= post.username %> on <%= new Date(post.timestamp).toLocaleString() %>
+                <% } else { %>
+                    Posted by Anonymous %>
+                <% } %>
+            </small></p>
+            </div>
           <hr>
       <% }) %>
     <% } else { %>
