@@ -43,6 +43,6 @@ router.post("/join", isAuth, joinClub);
 
 router.get("/leave", isAuth, leaveClub);
 
-router.get("/log-out", logOut);
+router.get("/log-out", isAuth, logOut);
 
 module.exports = router;

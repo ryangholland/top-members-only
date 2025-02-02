@@ -75,7 +75,7 @@ const validateUserSignup = [
 
 const sanitizeInput = (req, res, next) => {
   try {
-    ["first_name", "last_name", "username"].forEach((field) => {
+    ["first_name", "last_name", "username", "postContent"].forEach((field) => {
       if (req.body[field]) {
         req.body[field] = sanitizeHtml(req.body[field]);
       }
