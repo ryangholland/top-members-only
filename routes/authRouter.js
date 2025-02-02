@@ -4,12 +4,14 @@ const {
   validateUserSignup,
   sanitizeInput,
 } = require("../middleware/validators");
-const { signUp, logOut } = require("../controllers/authController");
+const { signUp, joinClub, logOut } = require("../controllers/authController");
+const isAuth = require("../middleware/isAuth");
 
 const router = express.Router();
 
 router.post("/sign-up", sanitizeInput, validateUserSignup, signUp);
 
+// Need to create callback function in authController
 router.post("/log-in", sanitizeInput, (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
@@ -29,6 +31,10 @@ router.post("/log-in", sanitizeInput, (req, res, next) => {
     });
   })(req, res, next);
 });
+
+router.get("/join", isAuth, (req, res) => res.render("join"));
+
+router.post("/join", isAuth, joinClub)
 
 router.get("/log-out", logOut);
 

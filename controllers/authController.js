@@ -1,4 +1,4 @@
-const { createUser } = require("../models/userModel");
+const { createUser, updateUserMembership } = require("../models/userModel");
 
 async function signUp(req, res, next) {
   const { first_name, last_name, username, password } = req.body;
@@ -18,6 +18,26 @@ async function signUp(req, res, next) {
   }
 }
 
+async function joinClub(req, res, next) {
+  const { passcode } = req.body;
+
+  if (passcode === process.env.CLUB_PASSCODE) {
+    try {
+      await updateUserMembership(req.user.id, "premium");
+      console.log(`Welcome to the club, ${req.user.first_name}`);
+      res.redirect("/");
+    } catch (error) {
+      res.render("join", {
+        error: "An unexpected error occurred",
+      });
+    }
+  } else {
+    res.render("join", {
+      error: "Invalid passcode",
+    });
+  }
+}
+
 function logOut(req, res, next) {
   req.logout((err) => {
     if (err) return next(err);
@@ -25,4 +45,4 @@ function logOut(req, res, next) {
   });
 }
 
-module.exports = { signUp, logOut };
+module.exports = { signUp, joinClub, logOut };

@@ -28,4 +28,18 @@ async function getUserByUsername(username) {
   return result.rows[0];
 }
 
-module.exports = { createUser, getUserByUsername };
+// membership_status can be regular, premium, or admin
+async function updateUserMembership(userId, newStatus) {
+  try {
+    const result = await pool.query(
+      "UPDATE users SET membership_status = $1 WHERE id = $2 RETURNING *",
+      [newStatus, userId]
+    );
+    return result.rows[0]; // Return the updated user
+  } catch (error) {
+    console.error("Error updating membership status:", error);
+    throw error;
+  }
+}
+
+module.exports = { createUser, getUserByUsername, updateUserMembership };
