@@ -21,22 +21,22 @@ async function signUp(req, res, next) {
 
 async function logIn(req, res, next) {
   passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.render("log-in", {
+        error: info ? info.message : "Invalid username or password.",
+        username: req.body.username,
+      });
+    }
+    req.logIn(user, (err) => {
       if (err) {
         return next(err);
       }
-      if (!user) {
-        return res.render("log-in", {
-          error: info ? info.message : "Invalid username or password.",
-          username: req.body.username,
-        });
-      }
-      req.logIn(user, (err) => {
-        if (err) {
-          return next(err);
-        }
-        return res.redirect("/");
-      });
-    })(req, res, next);
+      return res.redirect("/");
+    });
+  })(req, res, next);
 }
 
 async function joinClub(req, res, next) {
@@ -59,6 +59,26 @@ async function joinClub(req, res, next) {
   }
 }
 
+async function becomeAdmin(req, res, next) {
+  const { passcode } = req.body;
+
+  if (passcode === process.env.ADMIN_PASSCODE) {
+    try {
+      await updateUserMembership(req.user.id, "admin");
+      console.log(`You are now an admin, ${req.user.first_name}`);
+      res.redirect("/");
+    } catch (error) {
+      res.render("admin", {
+        error: "An unexpected error occurred",
+      });
+    }
+  } else {
+    res.render("admin", {
+      error: "Invalid passcode",
+    });
+  }
+}
+
 async function leaveClub(req, res, next) {
   try {
     await updateUserMembership(req.user.id, "regular");
@@ -75,4 +95,4 @@ function logOut(req, res, next) {
   });
 }
 
-module.exports = { signUp, logIn, joinClub, leaveClub, logOut };
+module.exports = { signUp, logIn, joinClub, becomeAdmin, leaveClub, logOut };

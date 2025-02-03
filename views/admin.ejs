@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Members Only - Become an Admin</title>
+  </head>
+  <body>
+    <h1>Become an Admin</h1>
+    <hr />
+
+    <%- include("partials/errors.ejs") %>
+
+    <form action="/admin" method="POST">
+      <label for="passcode">Enter the Secret Passcode:</label>
+      <input id="passcode" name="passcode" type="password" />
+      <br />
+      <button type="submit">Join</button>
+    </form>
+
+    <hr />
+    <a href="/">Home</a>
+  </body>
+</html>

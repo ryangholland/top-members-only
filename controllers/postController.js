@@ -1,4 +1,4 @@
-const { createPost } = require("../models/postModel");
+const { createPost, deletePostById } = require("../models/postModel");
 
 async function submitPost(req, res, next) {
   const { title, content } = req.body;
@@ -11,4 +11,13 @@ async function submitPost(req, res, next) {
   }
 }
 
-module.exports = { submitPost };
+async function deletePost(req, res, next) {
+  try {
+    await deletePostById(req.params.id);
+    res.redirect("/");
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = { submitPost, deletePost };

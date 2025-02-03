@@ -17,8 +17,9 @@
 
     <% if (currentUser.membership_status == "regular") { %>
     <a href="/join">Join the Club</a> | <% } %> 
-    <% if (currentUser.membership_status == "premium") { %>
     <a href="/leave">Leave the Club</a> |
+    <% if (currentUser.membership_status == "premium") { %>
+    
     <a href="/admin">Become an Admin</a> |
     <% } %>
 
@@ -38,6 +39,11 @@
                     Posted by Anonymous %>
                 <% } %>
             </small></p>
+            <% if (currentUser && currentUser.membership_status === "admin") { %>
+              <form action="/post/<%= post.id %>/delete" method="POST" style="display:inline;">
+                <button type="submit">Delete</button>
+              </form>
+            <% } %>
             </div>
           <hr>
       <% }) %>
