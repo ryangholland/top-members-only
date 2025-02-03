@@ -103,7 +103,7 @@ const validatePost = [
 
 const sanitizeInput = (req, res, next) => {
   try {
-    ["first_name", "last_name", "username", "postContent"].forEach((field) => {
+    ["first_name", "last_name", "username", "title", "content"].forEach((field) => {
       if (req.body[field]) {
         req.body[field] = sanitizeHtml(req.body[field]);
       }
